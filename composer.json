@@ -1,0 +1,21 @@
+{
+    "name": "windbridges/schema",
+    "description": "PHP schema validator",
+    "type": "library",
+    "version": "0.1.0",
+    "authors": [
+        {
+            "name": "alex",
+            "email": "windbridges@gmail.com"
+        }
+    ],
+    "require": {
+        "symfony/yaml": "^5.0",
+        "guzzlehttp/guzzle": "^6.5",
+        "symfony/property-access": "^5.1",
+        "webmozart/assert": "^1.9"
+    },
+    "autoload": {
+        "classmap": ["src/"]
+    }
+}

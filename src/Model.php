@@ -4,6 +4,7 @@ namespace WindBridges\Schema;
 
 use WindBridges\Schema\Type\ArrayType;
 use WindBridges\Schema\Type\BooleanType;
+use WindBridges\Schema\Type\ClassType;
 use WindBridges\Schema\Type\EnumType;
 use WindBridges\Schema\Type\NumberType;
 use WindBridges\Schema\Type\ObjectType;
@@ -14,32 +15,42 @@ use WindBridges\Schema\Type\ValidationException;
 
 class Model
 {
+    static protected $types = [
+        'string' => StringType::class,
+        'number' => NumberType::class,
+        'boolean' => BooleanType::class,
+        'object' => ObjectType::class,
+        'array' => ArrayType::class,
+        'enum' => EnumType::class,
+        'class' => ClassType::class
+    ];
+
     protected $schema = [];
-    protected $types = [];
     protected $classes = [];
 
     public function __construct(array $schema)
     {
         $this->schema = $schema;
 
-        $this->registerType('string', StringType::class);
-        $this->registerType('number', NumberType::class);
-        $this->registerType('boolean', BooleanType::class);
-        $this->registerType('object', ObjectType::class);
-        $this->registerType('array', ArrayType::class);
-        $this->registerType('enum', EnumType::class);
+        // $this->registerType('string', StringType::class);
+        // $this->registerType('number', NumberType::class);
+        // $this->registerType('boolean', BooleanType::class);
+        // $this->registerType('object', ObjectType::class);
+        // $this->registerType('array', ArrayType::class);
+        // $this->registerType('enum', EnumType::class);
     }
 
     public function create($data, $path = null)
     {
         $typeObj = $this->createTypeObject($this->schema, $data, $path);
-        $value = $typeObj->getValue();
-        return $value;
+
+        return $typeObj->getValue();
     }
 
-    public function registerType($name, $class)
+    static public function registerType($name, $class)
     {
-        $this->types[$name] = $class;
+        self::$types[$name] = $class;
+        // $this->types[$name] = $class;
     }
 
     /**
@@ -90,7 +101,7 @@ class Model
         }
 
         foreach ($types as $type) {
-            if (!isset($this->types[$type])) {
+            if (!isset(self::$types[$type])) {
                 throw new SchemaDefinitionException("Type '{$type}' is not registered (used in '{$displayPath}')");
             }
         }
@@ -115,7 +126,7 @@ class Model
 //        }
 
         foreach ($types as $type) {
-            $class = $this->types[$type];
+            $class = self::$types[$type];
 
             /** @var Type $typeObj */
             $typeObj = new $class($this, $value, $schema, $path);

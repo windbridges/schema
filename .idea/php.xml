@@ -24,5 +24,14 @@
       <path value="$PROJECT_DIR$/vendor/webmozart/assert" />
     </include_path>
   </component>
+  <component name="PhpProjectServersManager">
+    <servers>
+      <server host="127.0.0.1" id="ee7b0632-0234-4000-b838-399fdc005fca" name="WSL_Ubuntu" use_path_mappings="true">
+        <path_mappings>
+          <mapping local-root="$PROJECT_DIR$" remote-root="/mnt/d/webroot/repository/schema" />
+        </path_mappings>
+      </server>
+    </servers>
+  </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.3" />
 </project>

@@ -10,7 +10,7 @@ class PropertyDefinitionData
     use WithAnnotationValidator;
 
     /**
-     * @var mixed
+     * @var string|array
      * @type string|array
      * @required
      */
@@ -20,10 +20,10 @@ class PropertyDefinitionData
      * @var bool
      * @type boolean
      */
-    public $required;
+    public $required = false;
 
     /**
-     * @var mixed
+     * @var string|int|float|bool|null|array
      * @type string|number|boolean|enum
      * @noinspection PhpUndefinedClassInspection
      */
@@ -37,14 +37,49 @@ class PropertyDefinitionData
     public $props;
 
     /**
-     * @var string
+     * @var string|null
      * @type string
      */
     public $class;
 
     /**
-     * @var array
+     * @var array|null
      * @type array
      */
     public $items;
+
+    public function toSchema()
+    {
+        $result = [
+            'type' => $this->type,
+        ];
+
+        if ($this->required) {
+            $result['required'] = true;
+        }
+
+        if ($this->default !== null) {
+            $result['default'] = $this->default;
+        }
+
+        if ($this->class) {
+            $result['class'] = $this->class;
+        }
+
+        if ($this->props) {
+            /**
+             * @var string $name
+             * @var self $prop
+             */
+            foreach ($this->props as $name => $prop) {
+                $result['props'][$name] = $prop->toSchema();
+            }
+        }
+
+        if ($this->items) {
+            $result['items'] = $this->items;
+        }
+
+        return $result;
+    }
 }

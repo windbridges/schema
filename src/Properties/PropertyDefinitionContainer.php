@@ -4,6 +4,7 @@ namespace WindBridges\Schema\Properties;
 
 
 use ArrayIterator;
+use Exception;
 use IteratorAggregate;
 use Webmozart\Assert\Assert;
 use WindBridges\Schema\CollectionTrait;
@@ -21,9 +22,14 @@ class PropertyDefinitionContainer implements IteratorAggregate
         $this->props[$property->getName()] = $property;
     }
 
-    public function create(string $name, $type, ?bool $required, $default, ?array $items)
+    /**
+     * @param string $name
+     * @param array|PropertyDefinition $schemaOrDefinition
+     * @throws Exception
+     */
+    public function create(string $name, $schemaOrDefinition)
     {
-        $prop = new PropertyDefinition($name, $type, $required, $default, $items);
+        $prop = new PropertyDefinition($name, $schemaOrDefinition);
         $this->add($prop);
     }
 

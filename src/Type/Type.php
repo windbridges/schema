@@ -2,6 +2,8 @@
 
 namespace WindBridges\Schema\Type;
 
+use ReflectionProperty;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 use WindBridges\Schema\Model;
 
 abstract class Type
@@ -79,11 +81,20 @@ abstract class Type
             throw new ValidationException("Property '{$this->path}' is defined, but becomes NULL when casting to '{$class}'");
         }
 
-        if (isset($this->schema['class'])) {
+        if (isset($this->schema['class']) && $this->schema['type'] != 'class') {
             $this->castedValue = $this->createClassObject($this->schema['class'], function ($object) {
                 if ($this->value) {
-                    foreach ($this->value as $n => $v) {
-                        $object->$n = $v;
+                    $accessor = PropertyAccess::createPropertyAccessor();
+
+                    foreach ($this->value as $name => $value) {
+                        if ($accessor->isWritable($object, $name)) {
+                            $accessor->setValue($object, $name, $value);
+                        } else {
+                            $prop = new ReflectionProperty($object, $name);
+                            $prop->setAccessible(true);
+                            $prop->setValue($object, $value);
+                            $prop->setAccessible(false);
+                        }
                     }
                 }
             });
@@ -118,10 +129,6 @@ abstract class Type
         } else {
             throw new SchemaDefinitionException("Wrong class name or callable handler for alias '{$classOrAlias}'");
         }
-
-        //
-        $classObject->validate();
-        //
 
         return $classObject;
     }

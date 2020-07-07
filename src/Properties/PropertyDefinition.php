@@ -3,40 +3,31 @@
 namespace WindBridges\Schema\Properties;
 
 
-use WindBridges\Schema\InvalidSchemaException;
+use Exception;
 
 class PropertyDefinition
 {
+    /** @var PropertyDefinitionData */
+    protected $definitionData;
+
     protected $name;
-    protected $type = 'string';
-    protected $required = false;
-    protected $default;
-    protected $items;
 
     /**
      * @param string $name
-     * @param string|array $type
-     * @param bool $required
-     * @param mixed $default
-     * @param array|null $items
-     * @throws InvalidSchemaException
+     * @param array|PropertyDefinitionData $schemaOrDefinitionData
+     * @throws Exception
      */
-    public function __construct(string $name, $type, ?bool $required, $default, ?array $items)
+    public function __construct(string $name, $schemaOrDefinitionData)
     {
         $this->name = $name;
-        $this->type = $type;
-        $this->required = (bool)$required;
-        $this->default = $default;
-        $this->items = $items;
 
-        if ($default !== null && $required) {
-            throw new InvalidSchemaException("Property '{$name}' cannot have a default value since it is required");
+        if (is_array($schemaOrDefinitionData)) {
+            $schemaOrDefinitionData = PropertyDefinitionData::create($schemaOrDefinitionData);
         }
+
+        $this->definitionData = $schemaOrDefinitionData;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
@@ -47,23 +38,17 @@ class PropertyDefinition
      */
     public function getType()
     {
-        return $this->type;
+        return $this->definitionData->type;
     }
 
-    /**
-     * @return bool
-     */
     public function isRequired(): bool
     {
-        return $this->required;
+        return $this->definitionData->required;
     }
 
-    /**
-     * @return mixed|null
-     */
     public function getDefault()
     {
-        return $this->default;
+        return $this->definitionData->default;
     }
 
     /**
@@ -71,18 +56,11 @@ class PropertyDefinition
      */
     public function getItems(): ?array
     {
-        return $this->items;
+        return $this->definitionData->items;
     }
 
-
-
-    public function toSchema()
+    public function toSchema(): array
     {
-        return [
-            'type' => $this->type,
-            'required' => $this->required,
-            'default' => $this->default,
-            'items' => $this->items
-        ];
+        return $this->definitionData->toSchema();
     }
 }

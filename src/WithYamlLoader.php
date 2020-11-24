@@ -20,7 +20,7 @@ trait WithYamlLoader
         }
     }
 
-    static public function fromYamlFile(string $path, ?string $displayPath = null)
+    static public function fromYamlFile(string $path, ?string $displayPath = null): self
     {
         if (method_exists(static::class, 'create')) {
             Assert::fileExists($path);

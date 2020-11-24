@@ -58,6 +58,7 @@ class ObjectType extends Type
                     $available = join(', ', $this->enquoteArrayStrings(array_keys($props)));
                     $txtUnknown = count($diff) > 1 ? 'properties' : 'property';
                     $txtAvail = count($props) > 1 ? 'properties' : 'property';
+                    !$props && $available = 'list is empty';
                     throw new ValidationException("Unknown {$txtUnknown} {$unknown} specified for \"{$displayPath}\". Available {$txtAvail} {$available}.");
                 }
             }

@@ -1,6 +1,6 @@
 {
     "name": "windbridges/schema",
-    "description": "PHP schema validator",
+    "description": "Package for validation of complexly structured arrays (like configuration)",
     "type": "library",
     "version": "0.1.0",
     "authors": [

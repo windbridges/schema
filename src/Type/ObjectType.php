@@ -13,16 +13,7 @@ class ObjectType extends Type
     protected function cast()
     {
         $displayPath = $this->path ?: 'root';
-//        $aliases = [];
         $value = null;
-
-//        if (isset($this->schema['aliases'])) {
-//            $aliases = $this->schema['aliases'];
-//
-//            if (!is_array($aliases)) {
-//                throw new TypeException("Aliases must be an array at '{$displayPath}'");
-//            }
-//        }
 
         if (isset($this->schema['props'])) {
             $props = $this->schema['props'];
@@ -33,6 +24,8 @@ class ObjectType extends Type
 
             if ($this->value !== null) {
                 $value = [];
+
+                $props = $this->normalizeProperties($props);
 
                 foreach ($props as $name => $options) {
 //                    $alias = array_search($name, $aliases) ?: $name;
@@ -102,5 +95,23 @@ class ObjectType extends Type
         return array_map(function ($str) use($quote) {
             return "{$quote}{$str}{$quote}";
         }, $strings);
+    }
+
+    private function normalizeProperties(array $props)
+    {
+        $tmp = [];
+
+        foreach ($props as $name => $options) {
+            if (is_int($name) && is_string($options)) {
+                $name = $options;
+                $options = ['type' => 'string'];
+            } elseif (is_string($options)) {
+                $options = ['type' => $options];
+            }
+
+            $tmp[$name] = $options;
+        }
+
+        return $tmp;
     }
 }

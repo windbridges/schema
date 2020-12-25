@@ -1,5 +1,5 @@
 {
-    "name": "windbridges/parser",
+    "name": "windbridges/schema",
     "description": "",
     "type": "library",
     "minimum-stability": "dev",

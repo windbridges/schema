@@ -1,6 +1,6 @@
 {
-    "name": "windbridges/schema",
-    "description": "Package for validation of complexly structured arrays (like configuration)",
+    "name": "windbridges/parser",
+    "description": "",
     "type": "library",
     "minimum-stability": "dev",
     "license": "MIT",

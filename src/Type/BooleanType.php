@@ -8,7 +8,7 @@ class BooleanType extends Type
 
     function match(): bool
     {
-        return is_bool($this->value);
+        return true;
     }
 
     protected function cast()

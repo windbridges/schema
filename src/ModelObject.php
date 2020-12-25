@@ -12,17 +12,17 @@ class ModelObject
     protected $path;
     protected $model;
 
-    static public function create(array $schema)
+    static public function create($schema)
     {
         return new self($schema);
     }
 
-    static public function validate(array $schema, $data, string $displayPath = null)
+    static public function validate($schema, $data, string $displayPath = null)
     {
         return self::create($schema)->getModel()->create($data, $displayPath);
     }
 
-    public function __construct(array $schema)
+    public function __construct($schema)
     {
         $this->schema = $schema;
         $this->model = new Model($schema);

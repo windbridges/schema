@@ -28,7 +28,7 @@ class Model
     protected $schema = [];
     protected $classes = [];
 
-    public function __construct(array $schema)
+    public function __construct($schema)
     {
         $this->schema = $schema;
 
@@ -81,10 +81,15 @@ class Model
         return $this->classes[$alias];
     }
 
-    public function createTypeObject(array $schema, $data, $path = null)
+    public function createTypeObject($schema, $data, $path = null)
     {
         $value = null;
         $displayPath = $path ? $path : 'root';
+
+        if (is_string($schema)) {
+            $parser = new InlineDefinitionParser($schema);
+            $schema = $parser->getDefinitionData()->toSchema();
+        }
 
         if (!is_array($schema)) {
             throw new SchemaDefinitionException("Schema format is invalid: {$displayPath}");

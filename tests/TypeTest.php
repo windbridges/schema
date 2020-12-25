@@ -1,12 +1,41 @@
 <?php
 
-namespace WindBridges\Schema\Tests;
+namespace Tests;
 
 use PHPUnit\Framework\TestCase;
 use WindBridges\Schema\ModelObject;
 
 class TypeTest extends TestCase
 {
+
+    function testInlineDefinition()
+    {
+        $n = 10;
+        $v = ModelObject::validate('number', $n);
+        $this->assertEquals($v, $n);
+    }
+
+    function testInlineDefinitionOptionalValue()
+    {
+        $n = null;
+        $v = ModelObject::validate('number', $n);
+        $this->assertEquals($v, $n);
+    }
+
+    function testInlineDefinitionRequiredValue()
+    {
+        $n = null;
+        $v = ModelObject::validate('number*', $n);
+        $this->assertEquals($v, $n);
+    }
+
+    function testInlineDefinitionDefaultValue()
+    {
+        $n = null;
+        $v = ModelObject::validate('number:10', $n);
+        $this->assertEquals(10, $v);
+    }
+
     function testProperType()
     {
         $str = 'This is string';

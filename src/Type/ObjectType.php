@@ -105,8 +105,6 @@ class ObjectType extends Type
             if (is_int($name) && is_string($options)) {
                 $name = $options;
                 $options = ['type' => 'string'];
-            } elseif (is_string($options)) {
-                $options = ['type' => $options];
             }
 
             $tmp[$name] = $options;

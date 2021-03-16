@@ -3,6 +3,8 @@
 namespace WindBridges\Schema\Type;
 
 
+use WindBridges\Schema\InlineDefinitionParser;
+
 class ObjectType extends Type
 {
     function match(): bool
@@ -19,7 +21,8 @@ class ObjectType extends Type
             $props = $this->schema['props'];
 
             if (!is_array($props)) {
-                throw new SchemaDefinitionException("Properties in '{$displayPath}' should be an array");
+                $type = gettype($props);
+                throw new SchemaDefinitionException("Properties in '{$displayPath}' should be an array, got $type");
             }
 
             if ($this->value !== null) {
@@ -105,6 +108,11 @@ class ObjectType extends Type
             if (is_int($name) && is_string($options)) {
                 $name = $options;
                 $options = ['type' => 'string'];
+            }
+
+            if (is_string($options)) {
+                $parser = new InlineDefinitionParser($options);
+                $options = $parser->getDefinitionData()->toSchema();
             }
 
             $tmp[$name] = $options;

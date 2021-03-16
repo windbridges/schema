@@ -15,13 +15,15 @@ class ClassFactory
     protected $model;
 
 
-    public function __construct(string $className)
+    public function __construct(string $className, array $schema = null)
     {
         $this->className = $className;
 
-        # convert annotation schema to regular
-        $parser = new AnnotationParser($className);
-        $schema = $parser->getSchema();
+        if (!$schema) {
+            # convert annotation schema to regular
+            $parser = new AnnotationParser($className);
+            $schema = $parser->getSchema();
+        }
 
         # getting validated and type-casted data
         $this->model = new Model($schema);
